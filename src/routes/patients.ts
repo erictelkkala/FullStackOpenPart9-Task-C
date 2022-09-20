@@ -1,5 +1,6 @@
 import patientData from '../../data/patients.json';
-import { SensitivePatient } from '../types';
+import { SensitivePatient, newPatient, TypedRequestBody } from '../types';
+import { v4 as uuidv4 } from 'uuid';
 import express from 'express';
 
 const router = express.Router();
@@ -21,8 +22,33 @@ const getPatients = (): SensitivePatient[] => {
 };
 
 
+const addPatient = (patient: newPatient): newPatient => {
+    // Generate a new ID for the patient
+    const newPatient = {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        id: uuidv4(),
+        ...patient,
+    };
+    patients.push(newPatient);
+    return newPatient;
+};
+
+
 router.get('/', (_req, res) => {
     res.send(getPatients());
+});
+
+router.post('/', (req: TypedRequestBody, res) => {
+    try {
+        const newPatient: newPatient = addPatient(req.body);
+        res.json(newPatient);
+    } catch (e: unknown) {
+        let errorMessage = 'Something went wrong.';
+        if (e instanceof Error) {
+        errorMessage += ' Error: ' + e.message;
+    }
+        res.status(400).send(errorMessage);
+    }
 });
 
 export default router;
