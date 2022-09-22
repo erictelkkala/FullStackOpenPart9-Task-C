@@ -1,6 +1,6 @@
 import patientData from '../../data/patients.json';
 import { SensitivePatient, newPatient, TypedRequestBody } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import { verifyRequest, toNewPatient } from '../utils';
 import express from 'express';
 
 const router = express.Router();
@@ -23,14 +23,12 @@ const getPatients = (): SensitivePatient[] => {
 
 
 const addPatient = (patient: newPatient): newPatient => {
-    // Generate a new ID for the patient
-    const newPatient = {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        id: uuidv4(),
-        ...patient,
-    };
-    patients.push(newPatient);
-    return newPatient;
+        // Verify that the request is valid
+        verifyRequest(patient);
+        // Generate a new ID for the patient
+        const newPatient = toNewPatient(patient);
+        patients.push(newPatient);
+        return newPatient;
 };
 
 
