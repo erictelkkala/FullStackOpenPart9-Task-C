@@ -1,5 +1,6 @@
 import { Gender, newPatient, Patient } from "./types";
 import { v4 as uuidv4 } from 'uuid';
+import isDate from "date-fns/isDate";
 
 const isGender = (gender: unknown): gender is string => {
     return typeof gender === 'string' || gender instanceof String;
@@ -14,8 +15,9 @@ const isName = (name: unknown): name is string => {
     return typeof name === 'string' || name instanceof String;
 };
 
-const isDoB = (DoB: unknown): DoB is string => {
-    return typeof DoB === 'string' || DoB instanceof String;
+const isDoB = (DoB: string): DoB is string => {
+    // Create a date from the input string and check if it is a valid date
+    return isDate(new Date(DoB));
 };
 
 const isOccupation = (occupation: unknown): occupation is string => {
