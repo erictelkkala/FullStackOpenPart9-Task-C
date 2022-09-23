@@ -16,6 +16,11 @@ const isName = (name: unknown): name is string => {
 };
 
 const isDoB = (DoB: string): DoB is string => {
+    // Patter for the date of birth, YYYY-MM-DD
+    const pattern = new RegExp('\\d{4}-\\d{2}-\\d{2}');
+    if (!pattern.test(DoB)) {
+        throw new Error('Invalid date of birth');
+    }
     // Create a date from the input string and check if it is a valid date
     return isDate(new Date(DoB));
 };
