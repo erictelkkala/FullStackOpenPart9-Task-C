@@ -21,6 +21,12 @@ const getPatients = (): SensitivePatient[] => {
     }));
 };
 
+// Find a single patient by ID
+// This can also return an undefined value
+const getSinglePatient = (id: string): SensitivePatient | undefined => {
+    return patients.find((patient) => patient.id === id);
+};
+
 
 const addPatient = (patient: newPatient): newPatient => {
         // Verify that the request is valid
@@ -34,6 +40,16 @@ const addPatient = (patient: newPatient): newPatient => {
 
 router.get('/', (_req, res) => {
     res.send(getPatients());
+});
+
+router.get('/:id', (req, res) => {
+    const patient = getSinglePatient(req.params.id);
+    // If patient is found, return it, otherwise return 404
+    if (patient) {
+        res.send(patient);
+    } else {
+        res.sendStatus(404);
+    }
 });
 
 router.post('/', (req: TypedRequestBody, res) => {

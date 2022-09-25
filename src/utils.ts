@@ -1,5 +1,5 @@
-import { Gender, newPatient, Patient } from "./types";
-import { v4 as uuidv4 } from 'uuid';
+import {Gender, newPatient, Patient} from "./types";
+import {v4 as uuidv4} from 'uuid';
 import isDate from "date-fns/isDate";
 
 const isGender = (gender: unknown): gender is string => {
@@ -36,22 +36,22 @@ const isSSN = (ssn: unknown): ssn is string => {
 const isValidSSN = (ssn: string): boolean => {
     // Check if the provided ssn is valid
     // The current SSNs that are valid are 123456-123A and 123456-123B/1234
-    // Also ignore the case of the letters incase of user input
+    // Also ignore the case of the letters in case of user input
     const pattern = new RegExp('\\d{6}[-|A]\\d{3}[\\d-A-Z]', 'i');
     return pattern.test(ssn);
 };
 
 export const toNewPatient = (patient: newPatient): Patient => {
-    const newPatient: Patient = {
+    return {
         // Generate a new ID for the patient
         id: uuidv4(),
         name: patient.name,
         dateOfBirth: patient.dateOfBirth,
         gender: patient.gender,
         occupation: patient.occupation,
+        entries: [],
         ssn: patient.ssn
     };
-    return newPatient;
 };
 
 export const verifyRequest = (patient: newPatient): boolean => {
