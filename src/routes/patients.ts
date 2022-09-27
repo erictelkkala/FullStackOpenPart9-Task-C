@@ -1,4 +1,4 @@
-import patientData from '../../data/patients.json';
+import patientData from '../../data/patients';
 import { SensitivePatient, newPatient, TypedRequestBody } from '../types';
 import { verifyRequest, toNewPatient } from '../utils';
 import express from 'express';

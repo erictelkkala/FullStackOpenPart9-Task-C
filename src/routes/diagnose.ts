@@ -1,11 +1,11 @@
 import diagnosesData from '../../data/diagnoses.json';
-import { Diagnose } from '../types';
+import { Diagnosis } from '../types';
 import express from 'express';
 
 const router = express.Router();
 
 // Return all the diagnoses
-const getEntries = (): Array<Diagnose> => {
+const getEntries = (): Array<Diagnosis> => {
     return diagnosesData;
 };
 
