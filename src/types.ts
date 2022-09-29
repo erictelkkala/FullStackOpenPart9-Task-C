@@ -71,3 +71,15 @@ export type Entry =
     | HospitalEntry
     | OccupationalHealthcareEntry
     | HealthCheckEntry;
+
+export type NewEntry =
+    | Omit<HospitalEntry, 'id'>
+    | Omit<OccupationalHealthcareEntry, 'id'>
+    | Omit<HealthCheckEntry, 'id'>;
+
+export interface TypedRequestBodyEntry extends Express.Request {
+    params: {
+        id: string;
+    }
+    body: NewEntry;
+}

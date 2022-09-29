@@ -1,6 +1,7 @@
-import {Gender, newPatient, Patient} from "./types";
+import {Entry, Gender, newPatient, Patient, NewEntry} from "./types";
 import {v4 as uuidv4} from 'uuid';
 import isDate from "date-fns/isDate";
+import patients from "../data/patients";
 
 const isGender = (gender: unknown): gender is string => {
     return typeof gender === 'string' || gender instanceof String;
@@ -76,4 +77,63 @@ export const verifyRequest = (patient: newPatient): boolean => {
         console.log('Verifying complete');
         return true;
     }
+};
+
+export const toNewEntry = (entry: NewEntry): Entry => {
+    return {
+        id: uuidv4(),
+        ...entry
+    };
+};
+
+const verifyHealthCheckEntry = (entry: NewEntry): boolean => {
+    console.log('Verifying health check entry...');
+    console.log('Entry: ', entry);
+    if (entry.type !== 'HealthCheck') {
+        throw new Error('Invalid type of entry');
+    } else if (typeof entry.healthCheckRating !== 'number') {
+        throw new Error('Health check rating is not of a valid type');
+    } else if (!entry.description || !entry.date || !entry.specialist) {
+        throw new Error('Missing required fields');
+    } else if (entry.healthCheckRating < 0 || entry.healthCheckRating > 3) {
+        throw new Error('Invalid health check rating');
+    }
+    return true;
+};
+
+const verifyOccupationalHealthcareEntry = (entry: NewEntry): boolean => {
+    if (entry.type !== 'OccupationalHealthcare') {
+        throw new Error('Invalid type of entry');
+    } else if (!entry.description || !entry.date || !entry.specialist || !entry.employerName) {
+        throw new Error('Missing required fields');
+    }
+    return true;
+};
+
+const verifyHospitalEntry = (entry: NewEntry): boolean => {
+    if (entry.type !== 'Hospital') {
+        throw new Error('Invalid type of entry');
+    } else if (!entry.description || !entry.date || !entry.specialist || !entry.discharge) {
+        throw new Error('Missing required fields');
+    }
+    return true;
+};
+
+export const verifyEntry = (entry: NewEntry): boolean => {
+    console.log('Verifying entry...');
+    console.log('Entry to verify:', entry);
+    switch (entry.type) {
+        case 'HealthCheck':
+            return verifyHealthCheckEntry(entry);
+        case 'OccupationalHealthcare':
+            return verifyOccupationalHealthcareEntry(entry);
+        case 'Hospital':
+            return verifyHospitalEntry(entry);
+        default:
+            throw new Error('Invalid entry type');
+    }
+};
+
+export const getAllPatients = (): Patient[] => {
+    return patients;
 };
